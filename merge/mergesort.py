@@ -1,3 +1,12 @@
+#
+# mergesort.py - merge sort
+#
+# Copyright (C) 2017 by Joon Jung
+#
+# This code is licensed under the MIT license (MIT) (http://opensource.org/licenses/MIT)
+#
+
+
 # input: unordered list of integers
 # output: increasing ordered list of input integers
 #

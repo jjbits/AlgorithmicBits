@@ -1,3 +1,11 @@
+#
+# finsum.py - find equal sum number in a list
+#
+# Copyright (C) 2017 by Joon Jung
+#
+# This code is licensed under the MIT license (MIT) (http://opensource.org/licenses/MIT)
+#
+
 # INPUT: An integer list and an integer s
 # OUTPUT: A tuple of (x, y) which is s = x + y
 
