@@ -1,2 +1,2 @@
 # AlgorithmicBits
-Different algorithm bits proto-typed in Python.
+Different algorithm bits proto-typed.
