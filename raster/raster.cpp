@@ -7,6 +7,8 @@
  */
 
 #include <stdio.h>
+#include <math.h>
+#include <algorithm>
 #include <glm/glm.hpp>
 
 class Line {
@@ -61,6 +63,27 @@ public:
   float a, b, c;
 };
 
+// Bounding Box for a given triangle
+struct BBox {
+public:
+  void bound(glm::vec2 const& v0, glm::vec2 const& v1,
+        glm::vec2 const& v2)
+  {
+    xmin = std::ceil(std::min(std::min(v0.x, v1.x), v2.x));
+    xmax = std::ceil(std::max(std::max(v0.x, v1.x), v2.x));
+    ymin = std::ceil(std::min(std::min(v0.y, v1.y), v2.y));
+    ymax = std::ceil(std::max(std::max(v0.y, v1.y), v2.y));
+
+    //printf("bound: xmin:%lf xmax:%lf ymin:%lf ymax:%lf\n",
+    //       xmin, xmax, ymin, ymax);
+  }
+
+  float xmin = 0.0f;
+  float xmax = 0.0f;
+  float ymin = 0.0f;
+  float ymax = 0.0f;
+};
+
 // Assume 256 x 256 tile
 const int XRES = 256;
 const int YRES = 256;
@@ -106,15 +129,20 @@ static inline bool isInTriangle(Line& l0, Line& l1, Line& l2,
  */
 void rasterize(glm::vec2 const& v0, glm::vec2 const& v1, glm::vec2 const& v2)
 {
+  BBox b;
+
+  b.bound(v0, v1, v2);
+
   Line l0 = Line(v0, v1);
   Line l1 = Line(v1, v2);
   Line l2 = Line(v2, v0);
 
   float e0, e1, e2;
-  for (int y = 0; y < YRES; y++)
-    for (int x = 0; x < XRES; x++) {
-      if (isInTriangle(l0, l1, l2, x, y))
+  for (int y = b.ymin; y < b.ymax; y++)
+    for (int x = b.xmin; x < b.xmax; x++) {
+      if (isInTriangle(l0, l1, l2, x, y)) {
         printf("(%lf, %lf) is in the triangle. \n", (float)x, (float)y);
+      }
     }
 }
 

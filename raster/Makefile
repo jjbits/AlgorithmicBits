@@ -3,7 +3,7 @@ CXX=g++
 RM=rm -f
 CPPFLAGS=-g $(shell root-config --cflags) -I../external/glm -std=gnu++11
 LDFLAGS=-g $(shell root-config --ldflags)
-#LDLIBS=$(shell root-config --libs)
+LDLIBS=-lm
 
 SRCS=raster.cpp
 OBJS=$(subst .cpp,.o,$(SRCS))
