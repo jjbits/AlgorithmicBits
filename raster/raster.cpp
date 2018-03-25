@@ -12,6 +12,8 @@
 class Line {
 public:
   /*
+   * Referenced from Stanford CS148(Fall 2017) by Prof. Ron Fedkiw
+   *
    * Normal to a Line
    *   p1 = (x1, y1) p0 = (x0, y0)
    *   t = p1 - p0 = (x1 - x0, y1 - y0)
@@ -56,13 +58,35 @@ public:
     return a * x + b * y + c;
   }
 
-  private:
-    float a, b, c;
+  float a, b, c;
 };
 
 // Assume 256 x 256 tile
 const int XRES = 256;
 const int YRES = 256;
+
+// shadow assumes l.e == 0
+// so only considers the lines defining the triangle
+// l.a = v1.y - v0.y > 0 means v1.y > v0.y
+// which encodes a line with the normal pointing to the
+// the right
+//
+// l.a == 0 means the line parallel to the x axis
+// and l.b > 0 means the line with the normal pointing
+// up.
+static inline int shadow(Line& l)
+{
+  // normal points right || vertical normal pointing up
+  return (l.a > 0) || (l.a == 0 && l.b > 0);
+}
+
+// inside takes care of the overlapping lines
+// by removing the lines on the right side
+static inline int inside(float const& e, Line& l)
+{
+  // if e = 0, don't shade shadow line
+  return (e == 0) ? !shadow(l) : (e < 0);
+}
 
 static inline bool isInTriangle(Line& l0, Line& l1, Line& l2,
                   float const& x, float const& y)
@@ -71,7 +95,7 @@ static inline bool isInTriangle(Line& l0, Line& l1, Line& l2,
   e0 = l0.getE(x, y);
   e1 = l1.getE(x, y);
   e2 = l2.getE(x, y);
-  if (e0 <= 0 && e1 <= 0 && e2 <= 0)
+  if (inside(e0, l0) && inside(e1, l1) && inside(e2, l2))
     return true;
 
   return false;
